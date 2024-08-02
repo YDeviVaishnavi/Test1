@@ -1,7 +1,7 @@
 services:
 - type: web
-  name: bfhl-backend
+  name: bfhl-frontend
   env: node
   plan: free
-  buildCommand: 'npm install'
-  startCommand: 'node index.js'
+  buildCommand: 'npm install && npm run build'
+  startCommand: 'serve -s build'
