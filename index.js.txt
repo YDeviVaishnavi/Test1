@@ -1,0 +1,42 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(bodyParser.json());
+
+// POST endpoint
+app.post('/bfhl', (req, res) => {
+    const { data } = req.body;
+    if (!data) {
+        return res.status(400).json({ is_success: false, message: "Invalid input" });
+    }
+
+    const user_id = "your_full_name_ddmmyyyy";
+    const email = "your_college_email";
+    const roll_number = "your_roll_number";
+
+    const numbers = data.filter(item => !isNaN(item));
+    const alphabets = data.filter(item => isNaN(item));
+    const highest_alphabet = alphabets.length ? [alphabets.sort().reverse()[0]] : [];
+
+    res.json({
+        is_success: true,
+        user_id,
+        email,
+        roll_number,
+        numbers,
+        alphabets,
+        highest_alphabet
+    });
+});
+
+// GET endpoint
+app.get('/bfhl', (req, res) => {
+    res.json({ operation_code: 1 });
+});
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
