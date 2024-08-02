@@ -1,0 +1,56 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function App() {
+    const [input, setInput] = useState('');
+    const [response, setResponse] = useState(null);
+    const [selectedOptions, setSelectedOptions] = useState([]);
+
+    const handleSubmit = async () => {
+        try {
+            const res = await axios.post('https://your-backend-endpoint/bfhl', { data: JSON.parse(input) });
+            setResponse(res.data);
+        } catch (error) {
+            console.error("There was an error!", error);
+        }
+    };
+
+    const handleSelectChange = (event) => {
+        const { options } = event.target;
+        const selected = [];
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].selected) {
+                selected.push(options[i].value);
+            }
+        }
+        setSelectedOptions(selected);
+    };
+
+    const renderResponse = () => {
+        if (!response) return null;
+        return selectedOptions.map(option => (
+            <div key={option}>
+                <h3>{option}</h3>
+                <p>{JSON.stringify(response[option.toLowerCase()])}</p>
+            </div>
+        ));
+    };
+
+    return (
+        <div className="App">
+            <h1>BFHL Frontend</h1>
+            <textarea value={input} onChange={(e) => setInput(e.target.value)} rows="10" cols="50"></textarea>
+            <br />
+            <button onClick={handleSubmit}>Submit</button>
+            <br />
+            <select multiple={true} onChange={handleSelectChange}>
+                <option value="Numbers">Numbers</option>
+                <option value="Alphabets">Alphabets</option>
+                <option value="Highest_alphabet">Highest Alphabet</option>
+            </select>
+            {renderResponse()}
+        </div>
+    );
+}
+
+export default App;
